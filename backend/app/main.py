@@ -50,3 +50,15 @@ async def upload_document(file: UploadFile = File(...)):
         "characters_extracted": len(text),
         "preview": text[:500]
     }
+@app.get("/documents")
+async def list_documents():
+    documents = []
+    for filename in os.listdir(UPLOAD_DIR):
+        filepath = os.path.join(UPLOAD_DIR, filename)
+
+        if os.path.isfile(filepath):
+            documents.append({
+                "filename": filename,
+                "size_bytes": os.path.getsize(filepath)
+            })
+    return documents
